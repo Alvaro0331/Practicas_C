@@ -24,7 +24,7 @@ void agrega_arista(Tnodo &, Tnodo &, Tarista &);
 void insertar_arista();
 void vaciar_aristas(Tnodo &);
 ////void eliminar_nodo();
-//void eliminar_arista();
+void eliminar_arista();
 void mostrar_grafo();
 void mostrar_aristas();
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
             case 1: insertar_nodo();break;
             case 2: insertar_arista(); break;
             // case 3: eliminar_nodo(); break;
-            // case 4: eliminar_arista(); break;
+            case 4: eliminar_arista(); break;
             case 5: mostrar_grafo(); break;
             case 6: mostrar_aristas(); break;
             case 7: break;
@@ -58,7 +58,7 @@ void menu(){
     cout<<" 1. INSERTAR UN NODO "<<endl;
     cout<<" 2. INSERTAR UNA ARISTA "<<endl;
     //cout<<" 3. ELIMINAR UN NODO "<<endl;
-    //cout<<" 4. ELIMINAR UNA ARISTA "<<endl;
+    cout<<" 4. ELIMINAR UNA ARISTA "<<endl;
     cout<<" 5. MOSTRAR GRAFO "<<endl;
     cout<<" 6. MOSTRAR ARISTAS DE UN NODO "<<endl;
     cout<<" 7. SALIR "<<endl;
@@ -124,6 +124,45 @@ void insertar_arista(){
         }
         aux = aux->siguiente;
     }
+}
+
+void eliminar_arista(){
+    char ini, fin;
+    cout << "INGRESE NODO DE INICIO: ";
+    cin >> ini;
+    cout << "INGRESE NODO FINAL: ";
+    cin >> fin;
+
+    Tnodo aux = p;
+
+    // Buscar el nodo de inicio en la lista de nodos
+    while (aux != NULL) {
+        if (aux->nombre == ini) {
+            Tarista actual = aux->adyacencia;
+            Tarista anterior = NULL;
+
+            // Recorrer la lista
+            while (actual != NULL) {
+                if (actual->destino->nombre == fin) {
+                    // Si la arista es la primera en la lista de adyacencias
+                    if (anterior == NULL) {
+                        aux->adyacencia = actual->siguiente;
+                    } else {
+                        anterior->siguiente = actual->siguiente;
+                    }
+                    delete actual; // Eliminar la arista
+                    cout << "ARISTA ELIMINADA CORRECTAMENTE." << endl;
+                    return;
+                }
+                anterior = actual;
+                actual = actual->siguiente;
+            }
+            cout << "LA ARISTA NO EXISTE EN ESTE NODO." << endl;
+            return;
+        }
+        aux = aux->siguiente;
+    }
+    cout << "NODO INICIO NO ENCONTRADO." << endl;
 }
 
 void vaciar_aristas(Tnodo &aux){
