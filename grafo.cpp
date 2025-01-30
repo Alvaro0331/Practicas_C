@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iostream>
 using namespace std;
 
 struct nodo{
@@ -23,10 +22,11 @@ void insertar_nodo();
 void agrega_arista(Tnodo &, Tnodo &, Tarista &);
 void insertar_arista();
 void vaciar_aristas(Tnodo &);
-////void eliminar_nodo();
+void eliminar_nodo();
 void eliminar_arista();
 void mostrar_grafo();
 void mostrar_aristas();
+void eliminar_aristas_nodo(Tnodo nodo);
 
 int main(int argc, char *argv[]){
     p=NULL;
@@ -34,12 +34,11 @@ int main(int argc, char *argv[]){
     while(op!=7){
         menu();
         cout.flush();
-        fflush(stdin);
         cin>>op;
         switch(op){
             case 1: insertar_nodo();break;
             case 2: insertar_arista(); break;
-            // case 3: eliminar_nodo(); break;
+            case 3: eliminar_nodo(); break;
             case 4: eliminar_arista(); break;
             case 5: mostrar_grafo(); break;
             case 6: mostrar_aristas(); break;
@@ -57,7 +56,7 @@ void menu(){
     cout<<"\n\t GRAFOS DIRIGIDO \n\n";
     cout<<" 1. INSERTAR UN NODO "<<endl;
     cout<<" 2. INSERTAR UNA ARISTA "<<endl;
-    //cout<<" 3. ELIMINAR UN NODO "<<endl;
+    cout<<" 3. ELIMINAR UN NODO "<<endl;
     cout<<" 4. ELIMINAR UNA ARISTA "<<endl;
     cout<<" 5. MOSTRAR GRAFO "<<endl;
     cout<<" 6. MOSTRAR ARISTAS DE UN NODO "<<endl;
@@ -172,6 +171,68 @@ void vaciar_aristas(Tnodo &aux){
         r=q;
         q=q->siguiente;
         delete(r);
+    }
+}
+
+void eliminar_nodo(){
+    char nombre;
+    cout << "INGRESE EL NODO A ELIMINAR: ";
+    cin >> nombre;
+
+    Tnodo aux = p, anterior = NULL;
+
+    // Buscar el nodo en la lista de nodos
+    while (aux != NULL) {
+        if (aux->nombre == nombre) {
+            //Eliminar aristas del nodo
+            eliminar_aristas_nodo(aux);
+            Tarista arista = aux->adyacencia;
+            while (arista != NULL) {
+                Tarista temp = arista;
+                arista = arista->siguiente;
+                delete temp;
+            }
+
+            //Eliminar el nodo de la lista
+            if (anterior == NULL) {
+                p = aux->siguiente; //Primer elemento
+            } else {
+                anterior->siguiente = aux->siguiente;
+            }
+
+            delete aux; // Eliminar el nodo
+            cout << "NODO ELIMINADO CORRECTAMENTE." << endl;
+            return;
+        }
+        anterior = aux;
+        aux = aux->siguiente;
+    }
+    cout << "NODO NO ENCONTRADO." << endl;
+}
+
+void eliminar_aristas_nodo(Tnodo nodo){
+    Tnodo aux = p; // Apunta al primer nodo del grafo
+
+    while (aux != NULL) {
+        Tarista actual = aux->adyacencia;
+        Tarista anterior = NULL;
+
+        while (actual != NULL) {
+            if (actual->destino == nodo) {
+                //Buscar si la arista es la primera
+                if (anterior == NULL) {
+                    aux->adyacencia = actual->siguiente;
+                } else {
+                    anterior->siguiente = actual->siguiente;
+                }
+                delete actual; // Eliminar la arista
+                actual = (anterior == NULL) ? aux->adyacencia : anterior->siguiente;
+            } else {
+                anterior = actual;
+                actual = actual->siguiente;
+            }
+        }
+        aux = aux->siguiente;
     }
 }
 
