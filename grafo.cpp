@@ -26,13 +26,15 @@ void vaciar_aristas(Tnodo &);
 ////void eliminar_nodo();
 //void eliminar_arista();
 void mostrar_grafo();
-//void mostrar_aristas();
+void mostrar_aristas();
 
 int main(int argc, char *argv[]){
     p=NULL;
-    int op;
+    int op=0;
     while(op!=7){
         menu();
+        cout.flush();
+        fflush(stdin);
         cin>>op;
         switch(op){
             case 1: insertar_nodo();break;
@@ -40,11 +42,11 @@ int main(int argc, char *argv[]){
             // case 3: eliminar_nodo(); break;
             // case 4: eliminar_arista(); break;
             case 5: mostrar_grafo(); break;
-            // case 6: mostrar_aristas(); break;
+            case 6: mostrar_aristas(); break;
             case 7: break;
             default: cout<<"OPCION NO VALIDA"; break;
             }
-            cout<<endl<<endl;
+            cout<<endl;
             system("pause"); system("cls");
     }
     system("PAUSE");
@@ -58,9 +60,9 @@ void menu(){
     //cout<<" 3. ELIMINAR UN NODO "<<endl;
     //cout<<" 4. ELIMINAR UNA ARISTA "<<endl;
     cout<<" 5. MOSTRAR GRAFO "<<endl;
-    //cout<<" 6. MOSTRAR ARISTAS DE UN NODO "<<endl;
+    cout<<" 6. MOSTRAR ARISTAS DE UN NODO "<<endl;
     cout<<" 7. SALIR "<<endl;
-    cout<<"\n INGRESE OPCION: ";
+    cout<<" INGRESE OPCION: ";
 }
 
 void insertar_nodo(){
@@ -152,4 +154,36 @@ void mostrar_grafo(){
          ptr=ptr->siguiente;
         cout<<endl;
     }
+}
+
+void mostrar_aristas(){
+    char nodo;
+    cout << "INGRESE EL NODO A CONSULTAR: ";
+    cin >> nodo;
+
+    Tnodo aux = p;
+
+    // Buscar el nodo en la lista de nodos
+    while (aux != NULL) {
+        if (aux->nombre == nodo) {
+            cout << "NODO " << nodo << " | LISTA DE ADYACENCIA: ";
+            
+            // Verificar si tiene aristas
+            if (aux->adyacencia == NULL) {
+                cout << "SIN ARISTAS." << endl;
+                return;
+            }
+
+            Tarista arista = aux->adyacencia;
+            while (arista != NULL) {
+                cout << arista->destino->nombre << " ";
+                arista = arista->siguiente;
+            }
+            cout << endl;
+            return;
+        }
+        aux = aux->siguiente;
+    }
+
+    cout << "NODO NO ENCONTRADO." << endl;
 }
